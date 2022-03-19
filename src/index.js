@@ -8,9 +8,13 @@ const projects = [];
 
 
 app.get('/projects', (req, res) => {
+ const {tittle} = req.query;
 
+ const results = tittle 
+ ? projects.filter(project => project.tittle.includes(tittle))
+ : projects;
 
- return res.json(projects);
+ return res.json(results);
 })
 
 app.post('/projects', (req, res) => {
