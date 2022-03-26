@@ -1,11 +1,32 @@
 const express = require('express');
-const {uuid} = require('uuidv4');
+const {uuid, isUuid} = require('uuidv4');
 const app = express();
 
 app.use(express.json())
 
 const projects = [];
 
+function logRequets(req, res, next) {
+ const { method, url } = req;
+
+ const logLabel = `[${method.toUpperCase()}] ${url}`;
+ console.log(logLabel);
+
+ return next();
+}
+
+function validadeProjectId(req, res, next) {
+ const  { id } = req.params;
+
+ if (!isUuid(id)) {
+  return res.status(400).json({ message: 'Invalid project'});
+ }
+
+ return next();
+}
+
+app.use(logRequets)
+app.use('/projects/:id', validadeProjectId)
 
 app.get('/projects', (req, res) => {
  const {tittle} = req.query;
